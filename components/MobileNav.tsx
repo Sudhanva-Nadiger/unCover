@@ -1,6 +1,7 @@
 'use client'
 
-import { ArrowRight, Menu } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { ArrowRight, X, Menu } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -26,10 +27,16 @@ const MobileNav = ({ userId } : { userId : string | null}) => {
 
   return (
     <div className='sm:hidden'>
-      <Menu
+      {!isOpen ? (
+        <Menu
         onClick={toggleOpen}
-        className='relative z-50 h-5 w-5 text-zinc-700'
-      />
+        className='relative z-50 h-5 w-5 text-zinc-700 cursor-pointer'
+      />) : (
+        <X
+          onClick={toggleOpen}
+          className='relative z-50 h-5 w-5 text-zinc-700 cursor-pointer'
+        />
+      )}
 
       {isOpen ? (
         <div className='fixed animate-in slide-in-from-top-5 fade-in-20 inset-0 z-0 w-full'>
@@ -80,6 +87,18 @@ const MobileNav = ({ userId } : { userId : string | null}) => {
                     className='flex items-center w-full font-semibold'
                     href='/dashboard'>
                     Dashboard
+                  </Link>
+                </li>
+                <li className={cn({
+                  'hidden': pathname === '/'
+                })}>
+                  <Link
+                    onClick={() =>
+                      closeOnCurrent('/dashboard')
+                    }
+                    className={cn('flex items-center w-full font-semibold')}	
+                    href='/dashboard/resume'>
+                    See your resumes.
                   </Link>
                 </li>
                 <li className='my-3 h-px w-full bg-gray-300' />
