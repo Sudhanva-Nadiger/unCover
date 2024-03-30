@@ -5,13 +5,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-const MobileNav = () => {
+const MobileNav = ({ userId } : { userId : string | null}) => {
   const [isOpen, setOpen] = useState<boolean>(false)
 
   const toggleOpen = () => setOpen((prev) => !prev)
-
-  // TODO: User clerk auth() function
-  const { userId } = { userId : ""};
 
   const isAuthenticated = !!userId;
 
