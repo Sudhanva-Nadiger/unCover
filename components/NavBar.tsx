@@ -26,7 +26,7 @@ const Navbar = () => {
             />
             <div>
                 <span>un</span>
-                <span className='font-bold text-yellow-500'>Cover.</span>
+                <span className='font-bold text-primary'>Cover.</span>
             </div>
           </Link>
 

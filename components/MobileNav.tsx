@@ -41,7 +41,7 @@ const MobileNav = ({ userId } : { userId : string | null}) => {
                     onClick={() =>
                       closeOnCurrent('/sign-up')
                     }
-                    className='flex items-center w-full font-semibold text-yellow-500'
+                    className='flex items-center w-full font-semibold text-primary'
                     href='/sign-up'>
                     Get started
                     <ArrowRight className='ml-2 h-5 w-5' />
