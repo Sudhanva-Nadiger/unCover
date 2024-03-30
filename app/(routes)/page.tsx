@@ -7,9 +7,9 @@ import Image from 'next/image'
 export default function Home() {
   return (
     <>
-      <MaxWidthWrapper className='mb-12 mt-10 sm:mt-32 flex flex-col items-center justify-center text-center z-40'>
+      <MaxWidthWrapper className='mb-12 mt-16 sm:mt-32 flex flex-col items-center justify-center text-center z-40'>
         <div className='relative'>
-          <div className='mx-auto z-40 mb-4 relative flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-200 bg-white px-7 py-2 shadow-md backdrop-blur transition-all hover:border-gray-300 hover:bg-white/50'>
+          <div className='mx-auto mb-4 relative flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-200 bg-white px-7 py-2 shadow-md backdrop-blur transition-all hover:border-gray-300 hover:bg-white/50'>
             <p className='text-sm font-semibold text-gray-700'>
               Introducing unCover
             </p>
