@@ -1,7 +1,6 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper';
 import { buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
-import UploadResumeButton from './resume/components/UploadResumeButton';
 import { cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
 

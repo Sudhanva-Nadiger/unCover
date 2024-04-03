@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import UploadDropzone from '@/components/Uploader';
 
 const UploadResumeButton = ({
   className
@@ -38,6 +39,8 @@ const UploadResumeButton = ({
             Upload your resume based on which your cover letter will be cooked 🎭.
           </DialogDescription>
         </DialogHeader>
+
+        <UploadDropzone />
       </DialogContent>
     </Dialog>
   )
