@@ -8,10 +8,13 @@ import { Progress } from './ui/progress'
 import { useToast } from './ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { uploadResume } from '@/lib/actions'
 
 const UploadDropzone = ({
     isSubscribed,
+    userId
 }: {
+    userId: string | null,
     isSubscribed?: boolean
 }) => {
     const router = useRouter()
@@ -39,14 +42,19 @@ const UploadDropzone = ({
     }
 
     const handleFileUpload = async (acceptedFiles: File[]) => {
+
+        if (!acceptedFiles || acceptedFiles.length === 0) {
+            return
+        }
+
+
         setIsUploading(true)
 
         const progressInterval = startSimulatedProgress()
 
-        // handle file uploading
-        const res = await Promise.resolve([]);
+        const [data, error] = await uploadResume(userId, acceptedFiles[0])
 
-        if (!res) {
+        if (!data || error) {
             return toast({
                 title: 'Something went wrong',
                 description: 'Please try again later',
@@ -54,17 +62,24 @@ const UploadDropzone = ({
             })
         }
 
-        // const [fileResponse] = res
+        const { id } = data
 
-        // const key = fileResponse?.key
-
-        // if (!key) {
-        //   return toast({
-        //     title: 'Something went wrong',
-        //     description: 'Please try again later',
-        //     variant: 'destructive',
-        //   })
-        // }
+        if (!id) {
+            return toast({
+                title: 'Something went wrong',
+                description: 'Please try again later',
+                variant: 'destructive',
+            })
+        } else {
+            // TODO: store the id of the file and the name of it in the databse as supabse bucked doesnt support searchiing of files by ids yet!
+            toast({
+                title: 'Resume uploaded successfully',
+                description: 'Redirecting to resume page',
+                variant: 'default',
+            })
+    
+            router.push(`/dashboard/resume/${id}`)
+        }
 
         clearInterval(progressInterval)
         setUploadProgress(100)

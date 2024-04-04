@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import React from 'react'
@@ -13,12 +11,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import UploadDropzone from '@/components/Uploader';
+import { auth } from '@clerk/nextjs';
 
 const UploadResumeButton = ({
   className
 }: {
   className?: string
 }) => {
+  const { userId } = auth();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -40,7 +41,7 @@ const UploadResumeButton = ({
           </DialogDescription>
         </DialogHeader>
 
-        <UploadDropzone />
+        <UploadDropzone userId={userId} />
       </DialogContent>
     </Dialog>
   )
