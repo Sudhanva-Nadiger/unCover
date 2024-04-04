@@ -2,12 +2,14 @@
 
 import { Loader2 } from 'lucide-react';
 import React from 'react';
-import { Document, Page } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 
 
 type Props = {
     url: string
 }
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 const PdfRenderer = ({
     url
