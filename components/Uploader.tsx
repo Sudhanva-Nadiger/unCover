@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Dropzone from 'react-dropzone'
 import { Cloud, File, Loader2 } from 'lucide-react'
@@ -9,7 +9,8 @@ import { useToast } from './ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { uploadResume } from '@/lib/actions'
-import { storeResumeDetails } from '@/lib/actions/filaActions'
+import { storeResumeDetails } from '@/lib/actions/fileActions'
+import { Document } from 'react-pdf'
 
 const UploadDropzone = ({
     isSubscribed,
@@ -22,71 +23,97 @@ const UploadDropzone = ({
 
     const [isUploading, setIsUploading] = useState<boolean>(false)
     const [uploadProgress, setUploadProgress] = useState<number>(0)
+    const [numPages, setNumPages] = useState<number | null>(null)
+    const [processing, setProcessing] = useState<boolean>(false)
+    const [file, setFile] = useState<File | null>(null)
+
     const { toast } = useToast()
 
+    useEffect(() => {
+        if (numPages !== null) {
 
+            if (numPages > 1) {
+                setFile(null)
+                setNumPages(null)
+                toast({
+                    title: 'Invalid file',
+                    description: 'Please upload a single page resume',
+                    variant: 'destructive',
+                })
 
-    const startSimulatedProgress = () => {
-        setUploadProgress(0)
-
-        const interval = setInterval(() => {
-            setUploadProgress((prevProgress) => {
-                if (prevProgress >= 90) {
-                    clearInterval(interval)
-                    return prevProgress
-                }
-                return prevProgress + 5
-            })
-        }, 500)
-
-        return interval
-    }
-
-    const handleFileUpload = async (acceptedFiles: File[]) => {
-
-        if (!acceptedFiles || acceptedFiles.length === 0) {
-            return
-        }
-
-
-        setIsUploading(true)
-
-        const progressInterval = startSimulatedProgress()
-
-        const [data, error] = await uploadResume(userId, acceptedFiles[0])
-
-        if (!data || error) {
-            return toast({
-                title: 'Something went wrong',
-                description: 'Please try again later',
-                variant: 'destructive',
-            })
-        }
-
-        const { id } = data
-
-        const [_, err] = await storeResumeDetails(userId, id, acceptedFiles[0].name)
-
-        if (err) {
-            return toast({
-                title: 'Something went wrong',
-                description: 'Please try again later',
-                variant: 'destructive',
-            })
-        } else {
+                return
+            }
             
-            toast({
-                title: 'Resume uploaded successfully',
-                description: 'Redirecting to resume page',
-                variant: 'default',
-            })
-    
-            router.push(`/dashboard/resume/${id}`)
-        }
 
-        clearInterval(progressInterval)
-        setUploadProgress(100)
-    }
+            const startSimulatedProgress = () => {
+                setUploadProgress(0)
+
+                const interval = setInterval(() => {
+                    setUploadProgress((prevProgress) => {
+                        if (prevProgress >= 90) {
+                            clearInterval(interval)
+                            return prevProgress
+                        }
+                        return prevProgress + 5
+                    })
+                }, 500)
+
+                return interval
+            }
+
+
+
+            const uploadFiletoSupabse = async (acceptedFile: File | null) => {
+
+                if (!acceptedFile) {
+                    return
+                }
+
+
+                setIsUploading(true)
+
+                const progressInterval = startSimulatedProgress()
+
+                const [data, error] = await uploadResume(userId, acceptedFile)
+
+                if (!data || error) {
+                    return toast({
+                        title: 'Something went wrong',
+                        description: 'Please try again later',
+                        variant: 'destructive',
+                    })
+                }
+
+                const { id } = data
+
+                const [_, err] = await storeResumeDetails(userId, id, acceptedFile.name)
+
+                if (err) {
+                    return toast({
+                        title: 'Something went wrong',
+                        description: 'Please try again later',
+                        variant: 'destructive',
+                    })
+                } else {
+
+                    toast({
+                        title: 'Resume uploaded successfully',
+                        description: 'Redirecting to resume page',
+                        variant: 'default',
+                    })
+
+                    router.push(`/dashboard/resume/${id}`)
+                }
+
+                clearInterval(progressInterval)
+                setUploadProgress(100)
+            }
+
+            uploadFiletoSupabse(file)
+
+        }
+    }, [file, numPages, router, toast, userId])
+
 
     return (
         <Dropzone
@@ -96,8 +123,13 @@ const UploadDropzone = ({
                     'application/pdf': ['.pdf'],
                 }
             }
-            onDrop={handleFileUpload}>
-            {({ getRootProps, getInputProps, acceptedFiles }) => (
+            onDrop={(files) => {
+                setProcessing(true)
+                setFile(files[0])
+            }}
+            maxFiles={1}
+        >
+            {({ getRootProps, getInputProps }) => (
                 <div
                     {...getRootProps()}
                     className='border h-64 m-4 border-dashed border-gray-300 rounded-lg'>
@@ -118,16 +150,38 @@ const UploadDropzone = ({
                                 </p>
                             </div>
 
-                            {acceptedFiles && acceptedFiles[0] ? (
+                            {file ? (
                                 <div className='max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200'>
                                     <div className='px-3 py-2 h-full grid place-items-center'>
                                         <File className='h-4 w-4 text-primary' />
+                                        <Document
+                                            className={'hidden'}
+                                            file={file}
+                                            onLoadSuccess={({ numPages }) => {
+                                                setNumPages(numPages)
+                                                setProcessing(false)
+                                            }}
+                                            onError={(_) => toast({
+                                                title: 'Something went wrong',
+                                                description: 'Please try again later',
+                                                variant: 'destructive',
+                                            })}
+                                            
+                                        />
                                     </div>
                                     <div className='px-3 py-2 h-full text-sm truncate'>
-                                        {acceptedFiles[0].name}
+                                        {file.name}
                                     </div>
                                 </div>
                             ) : null}
+
+                            {processing ? (
+                                    <div className='flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2'>
+                                        <Loader2 className='h-3 w-3 animate-spin' />
+                                        Processing...
+                                    </div>
+                                ) : null
+                            }
 
                             {isUploading ? (
                                 <div className='w-full mt-4 max-w-xs mx-auto'>
