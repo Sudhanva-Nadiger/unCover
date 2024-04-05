@@ -1,5 +1,5 @@
 import PdfRenderer from '@/components/PdfRenderer';
-import { getResumeDetailsById } from '@/lib/actions/filaActions';
+import { getResumeDetailsById } from '@/lib/actions/fileActions';
 import { BUCKET_NAME } from '@/lib/constants';
 import { supabase } from '@/lib/supabse';
 import { auth } from '@clerk/nextjs';
@@ -21,17 +21,8 @@ const Resume = async ({
     return <div>Resume not found</div>
   }
 
-  const { data } = await supabase.storage.from(BUCKET_NAME).getPublicUrl(`${userId}/${resumeDetails.fileName}`)
-
-  console.log(data);
-  
-
-  if (!data || !data.publicUrl) {
-    return <div>Resume not found</div>
-  }
-
   return (
-    <PdfRenderer url={data.publicUrl} />
+    <PdfRenderer url={resumeDetails.url} />
   )
 }
 
