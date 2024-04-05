@@ -10,7 +10,10 @@ import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { uploadResume } from '@/lib/actions'
 import { storeResumeDetails } from '@/lib/actions/fileActions'
-import { Document } from 'react-pdf'
+import { Document, pdfjs } from 'react-pdf'
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+
 
 const UploadDropzone = ({
     isSubscribed,

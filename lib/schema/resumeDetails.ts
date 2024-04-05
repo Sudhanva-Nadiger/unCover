@@ -9,3 +9,5 @@ export const resumeDetail = pgTable('resumeDetails', {
     createdAt: timestamp('createdAt').defaultNow().notNull(),
     updatedAt: timestamp('updatedAt')
 })
+
+export type ResumeDetail = typeof resumeDetail.$inferSelect

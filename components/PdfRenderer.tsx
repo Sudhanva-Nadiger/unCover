@@ -4,6 +4,9 @@ import { Loader2 } from 'lucide-react';
 import React from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
+import 'react-pdf/dist/Page/AnnotationLayer.css'
+import 'react-pdf/dist/Page/TextLayer.css'
+
 type Props = {
     url: string
 }
@@ -26,7 +29,7 @@ const PdfRenderer = ({
                 className={'flex items-center justify-center w-full border'}
             >
                 <Page
-                    className={'border shadow-xl rounded-sm my-2'}
+                    className={'border shadow-xl rounded-sm my-2 h-fit'}
                     pageNumber={1}
                     renderTextLayer={false}
                     width={window.innerWidth - 32}

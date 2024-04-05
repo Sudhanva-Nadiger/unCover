@@ -3,6 +3,7 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../db"
 import { resumeDetail } from "../schema"
+import { revalidatePath } from "next/cache";
 
 export const storeResumeDetails = async (userId: string | null, resumeId: string, fileName: string) => {
     if(!userId || !resumeId || !fileName) {
@@ -20,6 +21,8 @@ export const storeResumeDetails = async (userId: string | null, resumeId: string
         }).returning({
             resumeId: resumeDetail.resumeId
         });
+
+        revalidatePath('/dashboard/resume')
 
         return [res[0], null] as const
     } catch (error) {
