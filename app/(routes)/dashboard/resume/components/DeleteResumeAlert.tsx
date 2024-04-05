@@ -50,7 +50,12 @@ const DeleteResumeAlert = ({
     return (
         <AlertDialog open={open}>
             <AlertDialogTrigger asChild>
-                <Button variant={'destructive'} size={'icon'} onClick={() => setOpen(true)} className='hidden group-hover:grid cursor-pointer absolute top-0 right-0 z-10 mt-1 mr-1 items-center'>
+                <Button variant={'destructive'} size={'icon'} onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    e.nativeEvent.stopPropagation()
+                    setOpen(true)
+                }} className='hidden group-hover:grid cursor-pointer absolute top-0 right-0 z-10 mt-1 mr-1 items-center'>
                     <LucideTrash2 />
                 </Button>
             </AlertDialogTrigger>

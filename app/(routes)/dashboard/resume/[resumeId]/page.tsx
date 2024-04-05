@@ -1,7 +1,5 @@
 import PdfRenderer from '@/components/PdfRenderer';
 import { getResumeDetailsById } from '@/lib/actions/fileActions';
-import { BUCKET_NAME } from '@/lib/constants';
-import { supabase } from '@/lib/supabse';
 import { auth } from '@clerk/nextjs';
 
 interface ResumeProps {

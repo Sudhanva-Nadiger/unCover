@@ -1,10 +1,15 @@
-import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import React from 'react'
-import UploadResumeButton from './components/UploadResumeButton'
-import { getAllResumes } from '@/lib/actions';
-import { auth } from '@clerk/nextjs';
-import ResumePreview from './components/ResumePreview';
 import { Inbox } from 'lucide-react';
+import { auth } from '@clerk/nextjs';
+
+import MaxWidthWrapper from '@/components/MaxWidthWrapper'
+import { Separator } from "@/components/ui/separator"
+
+import { getAllResumes } from '@/lib/actions';
+
+import UploadResumeButton from './components/UploadResumeButton'
+import ResumePreview from './components/ResumePreview';
+
 
 
 const ResumePage = async () => {
@@ -18,9 +23,11 @@ const ResumePage = async () => {
 
   return (
     <MaxWidthWrapper className='mt-8 sm:mt-20'>
-      <div className='flex items-center justify-center'>
+      <div className='flex items-center justify-end'>
         <UploadResumeButton />
       </div>
+
+      <Separator />
 
       {
         resumes.length === 0 ? (

@@ -13,7 +13,7 @@ import {
     CardFooter
 } from "@/components/ui/card"
 import DeleteResumeAlert from './DeleteResumeAlert'
-
+import { useRouter } from 'next/navigation'
 
 
 type Props = {
@@ -23,6 +23,7 @@ type Props = {
 const ResumePreview = ({
     resume
 }: Props) => {
+    const router = useRouter();
     return (
         <div className=''>
             <Document
@@ -34,7 +35,7 @@ const ResumePreview = ({
                     </div>
                 }
             >
-                <Card className='relative rounded-sm group cursor-none'>
+                <Card className='relative rounded-sm group cursor-none' onClick={() =>router.push(`/dashboard/resume/${resume.resumeId}`)}>
                     <DeleteResumeAlert resume={resume} />
 
                     <CardContent className='flex p-0 justify-center w-fit'>
