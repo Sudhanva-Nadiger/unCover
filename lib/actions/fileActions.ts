@@ -2,8 +2,10 @@
 
 import { and, eq } from "drizzle-orm";
 import { db } from "../db"
-import { resumeDetail } from "../schema"
+import { ResumeDetail, resumeDetail } from "../schema"
 import { revalidatePath } from "next/cache";
+import { supabase } from "../supabse";
+import { BUCKET_NAME } from "../constants";
 
 export const storeResumeDetails = async (userId: string | null, resumeId: string, fileName: string) => {
     if(!userId || !resumeId || !fileName) {
@@ -56,6 +58,28 @@ export const getAllResumes = async (userId: string | null) => {
         const res = await db.select().from(resumeDetail).where(eq(resumeDetail.userId, userId))
 
         return [res, null] as const
+    } catch (error) {
+        return [null, error as Error] as const
+    }
+}
+
+export const deleteResume = async (resume: ResumeDetail) => {
+    try {
+        const deleteFromDbPromise = db.delete(resumeDetail).where(and(eq(resumeDetail.resumeId, resume.resumeId), eq(resumeDetail.userId, resume.userId))).returning()
+
+        const deleteFromBucketPromise = supabase.storage.from(BUCKET_NAME).remove([`${resume.userId}/${resume.fileName}`])
+
+        const [_, { error }] = await Promise.all([deleteFromDbPromise, deleteFromBucketPromise])
+
+        console.log("deleted :)")
+
+        if(error) {
+            throw error
+        }
+
+        revalidatePath('/dashboard/resume')
+
+        return [true, null] as const
     } catch (error) {
         return [null, error as Error] as const
     }

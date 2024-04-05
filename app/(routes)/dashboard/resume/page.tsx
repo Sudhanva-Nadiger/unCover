@@ -32,7 +32,7 @@ const ResumePage = async () => {
         ) : (
           <div className='mt-8'>
             <h2 className='text-2xl font-bold'>All Resumes</h2>
-            <div className='mt-4'>
+            <div className='mt-4 flex flex-wrap gap-4'>
               {resumes.map(resume => (
                 <ResumePreview resume={resume} key={resume.resumeId} />
               ))}
