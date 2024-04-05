@@ -1,5 +1,4 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
-import UpgradeButton from './components/UpgradeButton'
 import { buttonVariants } from '@/components/ui/button'
 import {
   Tooltip,
@@ -10,22 +9,17 @@ import {
 import { PLANS } from '@/lib/config/stripe'
 import { cn } from '@/lib/utils'
 import { auth } from '@clerk/nextjs'
+import UpgradeButton from './components/UpgradeButton'
 
 import {
   ArrowRight,
   Check,
-  HelpCircle,
-  Minus,
+  HelpCircle
 } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 const Page = () => {
   const { userId: user } = auth();
-
-  if(!user) {
-    redirect('/sign-in')
-  }
 
   const pricingItems = [
     {

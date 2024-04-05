@@ -20,7 +20,7 @@ const Resume = async ({
   }
 
   return (
-    <PdfRenderer url={resumeDetails.url} />
+    <PdfRenderer url={resumeDetails.url} showBackArrow={true} />
   )
 }
 

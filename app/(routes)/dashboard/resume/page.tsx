@@ -20,8 +20,8 @@ const ResumePage = async () => {
 
 
   return (
-    <MaxWidthWrapper className='mt-8 sm:mt-20'>
-      <div className='flex flex-col items-center justify-end space-y-2'>
+    <MaxWidthWrapper className='mt-8'>
+      <div className='flex flex-col items-end justify-center space-y-2'>
         <UploadResumeButton />
         <Separator />
       </div>

@@ -8,7 +8,7 @@ import MobileNav from './MobileNav'
 import { UserButton, auth } from '@clerk/nextjs'
 
 const Navbar = () => {
-  const { userId: user} = auth();
+  const { userId: user } = auth();
 
   return (
     <nav className='sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-transparent backdrop-blur-lg transition-all'>
@@ -17,32 +17,32 @@ const Navbar = () => {
           <Link
             href='/'
             className='flex z-40 font-semibold space-x-1 items-center'>
-            <Image 
-                src={"/logo.png"} 
-                alt='logo' 
-                width={40} 
-                height={40} 
-                className='mix-blend-color-burn'
+            <Image
+              src={"/logo.png"}
+              alt='logo'
+              width={40}
+              height={40}
+              className='mix-blend-color-burn'
             />
             <div>
-                <span>un</span>
-                <span className='font-bold text-primary'>Cover.</span>
+              <span>un</span>
+              <span className='font-bold text-primary'>Cover.</span>
             </div>
           </Link>
 
           <MobileNav userId={user} />
 
           <div className='hidden items-center space-x-4 sm:flex'>
+            <Link
+              href='/pricing'
+              className={buttonVariants({
+                variant: 'ghost',
+                size: 'sm',
+              })}>
+              Pricing
+            </Link>
             {!user ? (
               <>
-                <Link
-                  href='/pricing'
-                  className={buttonVariants({
-                    variant: 'ghost',
-                    size: 'sm',
-                  })}>
-                  Pricing
-                </Link>
                 <Link
                   href={"/sign-in"}
                   className={buttonVariants({

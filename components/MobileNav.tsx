@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-const MobileNav = ({ userId } : { userId : string | null}) => {
+const MobileNav = ({ userId }: { userId: string | null }) => {
   const [isOpen, setOpen] = useState<boolean>(false)
 
   const toggleOpen = () => setOpen((prev) => !prev)
@@ -29,9 +29,9 @@ const MobileNav = ({ userId } : { userId : string | null}) => {
     <div className='sm:hidden'>
       {!isOpen ? (
         <Menu
-        onClick={toggleOpen}
-        className='relative z-50 h-5 w-5 text-zinc-700 cursor-pointer'
-      />) : (
+          onClick={toggleOpen}
+          className='relative z-50 h-5 w-5 text-zinc-700 cursor-pointer'
+        />) : (
         <X
           onClick={toggleOpen}
           className='relative z-50 h-5 w-5 text-zinc-700 cursor-pointer'
@@ -41,6 +41,16 @@ const MobileNav = ({ userId } : { userId : string | null}) => {
       {isOpen ? (
         <div className='fixed animate-in slide-in-from-top-5 fade-in-20 inset-0 z-0 w-full'>
           <ul className='absolute bg-white border-b border-zinc-200 shadow-xl grid w-full gap-3 px-10 pt-20 pb-8'>
+            <li>
+              <Link
+                onClick={() =>
+                  closeOnCurrent('/pricing')
+                }
+                className='flex items-center w-full font-semibold'
+                href='/pricing'>
+                Pricing
+              </Link>
+            </li>
             {!isAuthenticated ? (
               <>
                 <li>
@@ -66,16 +76,6 @@ const MobileNav = ({ userId } : { userId : string | null}) => {
                   </Link>
                 </li>
                 <li className='my-3 h-px w-full bg-gray-300' />
-                <li>
-                  <Link
-                    onClick={() =>
-                      closeOnCurrent('/pricing')
-                    }
-                    className='flex items-center w-full font-semibold'
-                    href='/pricing'>
-                    Pricing
-                  </Link>
-                </li>
               </>
             ) : (
               <>
@@ -96,7 +96,7 @@ const MobileNav = ({ userId } : { userId : string | null}) => {
                     onClick={() =>
                       closeOnCurrent('/dashboard')
                     }
-                    className={cn('flex items-center w-full font-semibold')}	
+                    className={cn('flex items-center w-full font-semibold')}
                     href='/dashboard/resume'>
                     See your resumes.
                   </Link>
