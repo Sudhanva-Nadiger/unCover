@@ -1,6 +1,6 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import React from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
@@ -22,7 +22,7 @@ const PdfRenderer = ({
             <Document
                 loading={
                     <div className='flex justify-center'>
-                        <Loader2 className='my-24 h-6 w-6 animate-spin' />
+                        <Loader className='my-24 h-6 w-6 animate-spin' />
                     </div>
                 }
                 file={url}

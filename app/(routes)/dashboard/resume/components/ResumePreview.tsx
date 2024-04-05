@@ -1,9 +1,8 @@
 'use client'
 
 import { ResumeDetail } from '@/lib/schema'
-import { Loader2, LucideTrash2, MoreVertical, Trash } from 'lucide-react'
-import React from 'react'
-import { Document, Thumbnail, ThumbnailProps } from 'react-pdf'
+import { Loader } from 'lucide-react'
+import { Document, Thumbnail } from 'react-pdf'
 
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
@@ -11,10 +10,7 @@ import 'react-pdf/dist/Page/TextLayer.css'
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+    CardFooter
 } from "@/components/ui/card"
 import DeleteResumeAlert from './DeleteResumeAlert'
 
@@ -34,7 +30,7 @@ const ResumePreview = ({
                 className={'flex items-center justify-center rounded'}
                 loading={
                     <div className='w-[200]'>
-                        <Loader2 className='my-24 h-6 w-6 animate-spin' />
+                        <Loader className='my-24 h-6 w-6 animate-spin' />
                     </div>
                 }
             >

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import Dropzone from 'react-dropzone'
-import { Cloud, File, Loader2 } from 'lucide-react'
+import { Cloud, File, Loader } from 'lucide-react'
 import { Progress } from './ui/progress'
 import { useToast } from './ui/use-toast'
 import { useRouter } from 'next/navigation'
@@ -180,7 +180,7 @@ const UploadDropzone = ({
 
                             {processing ? (
                                     <div className='flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2'>
-                                        <Loader2 className='h-3 w-3 animate-spin' />
+                                        <Loader className='h-3 w-3 animate-spin' />
                                         Processing...
                                     </div>
                                 ) : null
@@ -196,7 +196,7 @@ const UploadDropzone = ({
                                     />
                                     {uploadProgress === 100 ? (
                                         <div className='flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2'>
-                                            <Loader2 className='h-3 w-3 animate-spin' />
+                                            <Loader className='h-3 w-3 animate-spin' />
                                             Redirecting...
                                         </div>
                                     ) : null}
