@@ -4,7 +4,6 @@ import { Loader2 } from 'lucide-react';
 import React from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
-
 type Props = {
     url: string
 }
@@ -14,13 +13,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 const PdfRenderer = ({
     url
 }: Props) => {
-    const [isMounted, setIsMounted] = React.useState(false)
-
-    React.useEffect(() => {
-        setIsMounted(true)
-    }, [])
-
-    if (!isMounted) return null
 
     return (
         <div>
