@@ -134,7 +134,11 @@ const UploadDropzone = ({
         >
             {({ getRootProps, getInputProps }) => (
                 <div
-                    {...getRootProps()}
+                    {...getRootProps({
+                        onClick: (e) => {
+                            e.stopPropagation()
+                        }
+                    })}
                     className='border h-64 m-4 border-dashed border-gray-300 rounded-lg'>
                     <div className='flex items-center justify-center h-full w-full'>
                         <label

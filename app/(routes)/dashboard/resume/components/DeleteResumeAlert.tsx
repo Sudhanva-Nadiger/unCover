@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from "react"
 import { Loader, LucideTrash2 } from "lucide-react"
+import { useState } from "react"
 
 import {
     AlertDialog,
@@ -15,9 +15,9 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button, buttonVariants } from '@/components/ui/button'
-import { ResumeDetail } from "@/lib/schema"
-import { deleteResume } from "@/lib/actions"
 import { toast } from "@/components/ui/use-toast"
+import { deleteResume } from "@/lib/actions"
+import { ResumeDetail } from "@/lib/schema"
 
 type Props = {
     resume: ResumeDetail
@@ -50,12 +50,7 @@ const DeleteResumeAlert = ({
     return (
         <AlertDialog open={open}>
             <AlertDialogTrigger asChild>
-                <Button variant={'destructive'} size={'icon'} onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    e.nativeEvent.stopPropagation()
-                    setOpen(true)
-                }} className='hidden group-hover:grid cursor-pointer absolute top-0 right-0 z-10 mt-1 mr-1 items-center'>
+                <Button onClick={() => setOpen(true)} variant={'destructive'} size={'icon'} className='items-center'>
                     <LucideTrash2 />
                 </Button>
             </AlertDialogTrigger>
