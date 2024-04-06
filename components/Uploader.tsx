@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils'
 import { uploadResume } from '@/lib/actions'
 import { storeResumeDetails } from '@/lib/actions/fileActions'
 import { Document, pdfjs } from 'react-pdf'
+import { useUploadModal } from '@/hooks/useUploadModal'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -31,6 +32,7 @@ const UploadDropzone = ({
     const [file, setFile] = useState<File | null>(null)
 
     const { toast } = useToast()
+    const { onClose } = useUploadModal();
 
     useEffect(() => {
         if (numPages !== null) {
@@ -104,7 +106,8 @@ const UploadDropzone = ({
                         description: 'Redirecting to resume page',
                         variant: 'default',
                     })
-
+                    
+                    onClose()
                     router.push(`/dashboard/resume/${id}`)
                 }
 
@@ -115,7 +118,7 @@ const UploadDropzone = ({
             uploadFiletoSupabse(file)
 
         }
-    }, [file, numPages, router, toast, userId])
+    }, [file, numPages, router, toast, userId, onClose])
 
 
     return (
@@ -194,9 +197,8 @@ const UploadDropzone = ({
                                 <div className='w-full mt-4 max-w-xs mx-auto'>
                                     <Progress
                                         value={uploadProgress}
-                                        className={cn('h-1 w-full bg-zinc-200', {
-                                            'bg-green-500': uploadProgress === 100,
-                                        })}
+                                        className={'h-1 w-full bg-zinc-200'}
+                                        indicatorColor={uploadProgress === 100 ? 'bg-green-500' : ''}
                                     />
                                     {uploadProgress === 100 ? (
                                         <div className='flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2'>
