@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { UploadModalProvider } from "@/components/providers/UploadModalProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
           {children}
 
           <Toaster />
+          <UploadModalProvider />
         </body>
       </html>
     </ClerkProvider>

@@ -20,14 +20,14 @@ const DashboardPage = () => {
                 </Link>
 
                 <Link
-                    href={'/dashboard/cover-letter'}
+                    href={'/dashboard/new'}
                     className={cn(buttonVariants({
                         variant: 'default',
                         size: 'sm'
                     }))}
                 >
                     <Plus className='w-6 h-6 mr-2' />
-                    Create cover letter
+                    New cover letter
                 </Link>
             </div>
 

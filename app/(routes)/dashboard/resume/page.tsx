@@ -9,10 +9,20 @@ import { getAllResumes } from '@/lib/actions';
 import UploadResumeButton from './components/UploadResumeButton'
 import ResumePreview from './components/ResumePreview';
 
+type ResumePageProps = {
+  searchParams?: { 
+    [key: string]: string | string[] | undefined 
+  }
+}
 
-const ResumePage = async () => {
+
+const ResumePage = async ({
+  searchParams
+}: ResumePageProps) => {
   const { userId } = auth();
   const [resumes, error] = await getAllResumes(userId);
+
+  const openUploader = searchParams?.open_uploader === 'true'
 
   if (error) {
     return <div>{error.message || "Something went wrong"}</div>
@@ -22,7 +32,7 @@ const ResumePage = async () => {
   return (
     <MaxWidthWrapper className='mt-8'>
       <div className='flex flex-col items-end justify-center space-y-2'>
-        <UploadResumeButton />
+        <UploadResumeButton openUploader={openUploader} />
         <Separator />
       </div>
 
