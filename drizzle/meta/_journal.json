@@ -15,6 +15,13 @@
       "when": 1712301487880,
       "tag": "0001_youthful_russian",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1712424567578,
+      "tag": "0002_cute_blink",
+      "breakpoints": true
     }
   ]
 }
