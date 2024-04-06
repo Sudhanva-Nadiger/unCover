@@ -3,6 +3,7 @@ import { create } from 'zustand'
 type Data = {
     url: string;
     fileName: string;
+    resumeId: string;
 }
 
 type SelectResume = {
@@ -13,7 +14,8 @@ type SelectResume = {
 export const useSelectResume = create<SelectResume>((set) => ({
     data: {
         url: '',
-        fileName: ''
+        fileName: '',
+        resumeId: ''
     },
     onSelect: (value: Data) => set({ data: value}) 
 }))
