@@ -110,12 +110,12 @@ const PdfRenderer = ({
                 </div>
             </div>
 
-            <div className='flex-1 w-full max-h-screen'>
+            <div className='flex-1 w-full h-fit'>
                 <div className='h-fit'>
                     <div ref={ref}>
                         <Document
                             loading={
-                                <div className='flex justify-center'>
+                                <div className='flex justify-center h-full'>
                                     <Loader className='my-24 h-6 w-6 animate-spin' />
                                 </div>
                             }

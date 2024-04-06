@@ -26,18 +26,18 @@ const ResumePreview = ({
 }: Props) => {
     const router = useRouter();
     return (
-        <div className=''>
+        <div className='h-full'>
             <Document
                 file={resume.url}
                 className={'flex items-center justify-center rounded'}
                 loading={
-                    <div className='w-[200]'>
+                    <div className='w-full h-full'>
                         <Loader className='my-24 h-6 w-6 animate-spin' />
                     </div>
                 }
             >
                 <>
-                    <Card className='relative rounded-sm group cursor-none'>
+                    <Card className='relative rounded-sm group'>
                         <div className='items-end right-0 space-x-2 hidden group-hover:flex cursor-pointer absolute mt-1 mr-1 z-30'>
                             <DeleteResumeAlert resume={resume} />
 
@@ -50,9 +50,9 @@ const ResumePreview = ({
                         </div>
 
                         <CardContent className='flex p-0 justify-center w-fit'>
-                            <Thumbnail pageNumber={1} width={200} className={'flex-1 flex justify-center w-full rounded p-1'} />
+                            <Thumbnail pageNumber={1} height={300} className={'flex-1 flex justify-center w-full rounded p-1 cursor-auto'} />
                         </CardContent>
-                        <CardFooter className='text-primary absolute bottom-0 h-28 bg-black bg-opacity-85 rounded-t-xl rounded-b-sm z-10 w-full flex flex-col justify-end gap-2'>
+                        <CardFooter className='text-primary absolute bottom-0 h-28 bg-black bg-opacity-85 rounded-t-xl rounded-b-sm z-10 w-full flex flex-col justify-around gap-2'>
                             <p className='w-full truncate'>{resume.fileName}</p>
                             <p className='text-sm'><span className='text-xs'>Modified at:</span> {resume.updatedAt?.toDateString() ?? resume.createdAt.toDateString()}</p>
                         </CardFooter>

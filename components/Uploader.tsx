@@ -99,20 +99,20 @@ const UploadDropzone = ({
                         description: 'Please try again later',
                         variant: 'destructive',
                     })
-                } else {
-
-                    toast({
-                        title: 'Resume uploaded successfully',
-                        description: 'Redirecting to resume page',
-                        variant: 'default',
-                    })
-                    
-                    onClose()
-                    router.push(`/dashboard/resume/${id}`)
                 }
+
+                toast({
+                    title: 'Resume uploaded successfully',
+                    description: 'Redirecting to resume page',
+                    variant: 'default',
+                })
+                
+                router.push(`/dashboard/resume/${id}`)
 
                 clearInterval(progressInterval)
                 setUploadProgress(100)
+
+                onClose()
             }
 
             uploadFiletoSupabse(file)
