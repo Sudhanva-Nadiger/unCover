@@ -10,16 +10,27 @@ import ChatWrapper from './components/ChatWrapper'
 type Props = {
     params: {
         coverletterId: string
+    },
+    searchParams: {
+        created_clid: string
     }
 }
 
 const CoverLetterPage = async ({
-    params
+    params,
+    searchParams
 }: Props) => {
     const { userId } = auth();
 
     const [resumes, error] = await getAllResumes(userId);
-    const [coverLetter, err] = await fetchCoverLetterById(userId, params.coverletterId);
+
+    const id = searchParams.created_clid ?? params.coverletterId;
+    console.log("hello******", id);
+    
+    const [coverLetter, err] = await fetchCoverLetterById(userId, id);
+
+    console.log("cover letter******", coverLetter);
+    
 
     if(params.coverletterId !== 'new' && err) {
         return (

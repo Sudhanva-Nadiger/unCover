@@ -1,12 +1,13 @@
 'use server'
 
 import { and, eq } from "drizzle-orm"
-import { coverLetter } from "../schema"
+import { CoverLetter, coverLetter } from "../schema"
 import { db } from "../db"
 
+
 export const fetchCoverLetterById = async (userId: string | null, coverLetterId: string) => {
-    if(!userId || !coverLetterId) {
-        return [null, new Error("Invalid data")] as const
+    if(!userId) {
+        return [null, new Error("Invalid user")] as const
     }
 
     try {
@@ -15,6 +16,17 @@ export const fetchCoverLetterById = async (userId: string | null, coverLetterId:
             eq(coverLetter.coverLetterId, coverLetterId)
         ))
 
+        return [res[0], null] as const
+    } catch (error) {
+        return [null, error as Error] as const
+    }
+}
+
+export const saveCoverLetterDetails = async (detail: Omit<CoverLetter, "coverLetterId">) => {
+    try {
+        const res = await db.insert(coverLetter).values(detail).returning({
+            coverLetterId: coverLetter.coverLetterId
+        })
         return [res[0], null] as const
     } catch (error) {
         return [null, error as Error] as const
