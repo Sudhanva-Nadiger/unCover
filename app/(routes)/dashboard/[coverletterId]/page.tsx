@@ -25,12 +25,8 @@ const CoverLetterPage = async ({
     const [resumes, error] = await getAllResumes(userId);
 
     const id = searchParams.created_clid ?? params.coverletterId;
-    console.log("hello******", id);
     
     const [coverLetter, err] = await fetchCoverLetterById(userId, id);
-
-    console.log("cover letter******", coverLetter);
-    
 
     if(params.coverletterId !== 'new' && err) {
         return (

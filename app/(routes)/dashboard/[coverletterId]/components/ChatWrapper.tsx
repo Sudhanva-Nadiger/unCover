@@ -1,6 +1,6 @@
 'use client'
 
-import { CoverLetter } from '@/lib/schema'
+import { CoverLetter as TCoverLetter } from '@/lib/schema'
 
 import {
     Tabs,
@@ -8,91 +8,145 @@ import {
     TabsList,
     TabsTrigger
 } from "@/components/ui/tabs"
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
+
+import { useCompletion } from 'ai/react'
+import { useToast } from '@/components/ui/use-toast'
 import { useSelectResume } from '@/hooks/useSelectPdf'
 import { saveCoverLetterDetails } from '@/lib/actions'
-import { useToast } from '@/components/ui/use-toast'
-import { usePathname, useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
-import { pdfjs } from 'react-pdf'
+import { useAuth } from '@clerk/nextjs'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { TextItem } from 'pdfjs-dist/types/src/display/api'
+import { FormEvent, useState } from 'react'
+import { pdfjs } from 'react-pdf'
+import GeneratedCoverLetter from './CoverLetter'
+import Form from './Form'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 
 type Props = {
-    coverLetter: CoverLetter | null
+    coverLetter: TCoverLetter | null
 }
 
 const ChatWrapper = ({
-    coverLetter
+    coverLetter,
 }: Props) => {
     const [tab, setTab] = useState<'jd' | 'coverletter'>('jd')
     const [loading, setLoading] = useState<boolean>(false)
+    const [jobDescription, setJobDescription] = useState<string>(coverLetter?.jobDescription || '')
+    const [prompt, setPrompt] = useState<string | null>(coverLetter?.customPrompt || null)
+    const [accumulatedText, setAccumulatedText] = useState<string>('')
+
     const { toast } = useToast()
     const { data } = useSelectResume()
+
     const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams()
+    const { userId } = useAuth()
 
-    const handleClick = async () => {
-        setLoading(true)
-        const resumeUrl = data.url;
-        // handle updating or first time creation of cover letter
-        const [res, err] = await saveCoverLetterDetails({
-            jobDescription: 'hello',
-            resumeId: data.resumeId,
-            userId: '1',
-            customPrompt: null,
-            response: ''
-        });
+    const saveTheDetails = ((searchParams.get('created_clid') === null) && (coverLetter === null))
+    const coverLetterId = searchParams.get('created_clid') || coverLetter?.coverLetterId
 
-        if (err) {
-            return toast({
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        try {
+            setLoading(true)
+
+            if (saveTheDetails) {
+                const [res, err] = await saveCoverLetterDetails({
+                    jobDescription: jobDescription,
+                    resumeId: data.resumeId,
+                    userId: userId!,
+                    customPrompt: prompt || '',
+                    response: ''
+                });
+
+                if (err) {
+                    return toast({
+                        title: 'Something went wrong',
+                        description: 'Could not complete the request',
+                        variant: 'destructive'
+                    })
+                }
+
+                const params = new URLSearchParams(searchParams);
+                params.set('created_clid', res.coverLetterId)
+
+                router.replace(`${pathname}?${params.toString()}`, {
+                    scroll: false
+                })
+            }
+
+
+            const response = await fetch(data.url)
+            const blob = await response.blob()
+
+            const blobUrl = URL.createObjectURL(blob)
+
+            const pdfLoader = pdfjs.getDocument(blobUrl)
+            const pdf = await pdfLoader.promise
+
+            const numPages = pdf.numPages
+            let extractedText = ``
+
+            for (let i = 1; i <= numPages; i++) {
+                const page = await pdf.getPage(i)
+                const textContent = await page.getTextContent()
+                const pageText = (textContent.items as TextItem[]).map((item) => item.str).join(" ")
+                extractedText += pageText
+            }
+
+            setTab('coverletter')
+
+            const completionResponse = await fetch('/api/completion', {
+                method: 'POST',
+                body: JSON.stringify({
+                    extractedText,
+                    coverLetterId,
+                    jobDescription,
+                    prompt
+                }),
+            })
+
+            if(!completionResponse.ok) {
+                throw new Error("Could not generate the data")
+            }
+
+            const stream = completionResponse.body
+
+            if(!stream) {
+                throw new Error()
+            }
+
+            setLoading(false)
+
+            const reader = stream.getReader()
+            const decoder = new TextDecoder()
+
+            let done = false
+            let accumulator = ''
+            while(!done) {
+                const { value, done: doneReading} = await reader.read()
+                done = doneReading
+                const chunk = decoder.decode(value)
+
+                accumulator += chunk
+
+                setAccumulatedText(accumulator)
+            }
+
+        } catch (error) {
+            console.log(error);
+
+            toast({
                 title: 'Something went wrong',
                 description: 'Could not complete the request',
                 variant: 'destructive'
             })
+        } finally {
+            setLoading(false)
         }
-
-        // only if first time creation
-        const params = new URLSearchParams(searchParams);
-        params.set('created_clid', res.coverLetterId)
-
-        router.replace(`${pathname}?${params.toString()}`, {
-            scroll: false
-        })
-
-
-        const response = await fetch(data.url)
-        const blob = await response.blob()
-
-        const blobUrl = URL.createObjectURL(blob)
-
-        const pdfLoader = pdfjs.getDocument(blobUrl)
-        const pdf = await pdfLoader.promise
-
-        const numPages = pdf.numPages
-        let extractedText = ``
-
-        for (let i = 1; i <= numPages; i++) {
-            const page = await pdf.getPage(i)
-            const textContent = await page.getTextContent()
-            const pageText = (textContent.items as TextItem[]).map((item) => item.str).join(" ")
-            extractedText += pageText
-        }
-
-        const apiResponse : any = await fetch('/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                url: resumeUrl,
-                coverLetterId: res.coverLetterId
-            })
-        })
-
     }
 
 
@@ -106,14 +160,21 @@ const ChatWrapper = ({
                             <TabsTrigger onClick={() => setTab('coverletter')} value='coverletter'>Cover letter</TabsTrigger>
                         </TabsList>
                         <TabsContent value='jd' className='w-full'>
-                            <div>
-                                {JSON.stringify(coverLetter)}
-                            </div>
-                            <Button className='w-full' onClick={handleClick}>
-                                Generate
-                            </Button>
+                            <Form
+                                handleSubmit={handleSubmit}
+                                jobDescription={jobDescription}
+                                setJobDescription={setJobDescription}
+                                prompt={prompt}
+                                setPrompt={setPrompt}
+                                loading={loading}
+                            />
                         </TabsContent>
-                        <TabsContent value='coverletter'>cover letter</TabsContent>
+                        <TabsContent value='coverletter'>
+                            <GeneratedCoverLetter 
+                                loading={loading}
+                                completion={accumulatedText}
+                            /> 
+                        </TabsContent>
                     </Tabs>
                 </div>
 
