@@ -16,7 +16,7 @@ import { saveCoverLetterDetails } from '@/lib/actions'
 import { useAuth } from '@clerk/nextjs'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { TextItem } from 'pdfjs-dist/types/src/display/api'
-import { FormEvent, useState } from 'react'
+import { FormEvent, memo, useState } from 'react'
 import { pdfjs } from 'react-pdf'
 import GeneratedCoverLetter from './CoverLetter'
 import Form from './Form'
@@ -169,10 +169,10 @@ const ChatWrapper = ({
                                 loading={loading}
                             />
                         </TabsContent>
-                        <TabsContent value='coverletter'>
+                        <TabsContent value='coverletter' className='w-full'>
                             <GeneratedCoverLetter 
                                 loading={loading}
-                                completion={accumulatedText}
+                                completion={accumulatedText || coverLetter?.response}
                             /> 
                         </TabsContent>
                     </Tabs>
@@ -183,4 +183,5 @@ const ChatWrapper = ({
     )
 }
 
-export default ChatWrapper
+const memoComponent = memo(ChatWrapper)
+export default memoComponent
