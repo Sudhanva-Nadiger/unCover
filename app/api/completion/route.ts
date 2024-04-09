@@ -43,10 +43,7 @@ function generatePrompt({
           Write a cover letter for given job description and resume details.
           if anywhere you need to use name then use ${userName} and for email use ${email}.
   
-          Miscellaneous information: Be resectful, professional and concise.
-      
-          If the prompt is not related to jobs and cover letter or out of context then please ignore the request and send a response of:
-          'Please give valid prompt related to cover letter creation.'
+          Miscellaneous information: Be resectful, professional and concise. And give answer in English only unless specified.
       `
   
       result += `
@@ -54,7 +51,10 @@ function generatePrompt({
   
           Resume details: ${extractedText} \n
   
-          ${prompt}
+          prompt:${prompt}
+
+          If the prompt is not related to jobs and cover letter or out of context then please ignore the request and send a response of:
+          'Please give valid prompt related to cover letter creation.'
       `
   
       return result
