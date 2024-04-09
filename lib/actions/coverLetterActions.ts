@@ -1,8 +1,8 @@
-'use server'
+"use server"
 
 import { and, eq } from "drizzle-orm"
-import { CoverLetter, coverLetter } from "../schema"
 import { db } from "../db"
+import { coverLetter, type CoverLetter } from "../schema"
 
 
 export const fetchCoverLetterById = async (userId: string | null, coverLetterId: string) => {
