@@ -35,6 +35,14 @@ const CoverLetter = ({
         )
     }
 
+    if(!completion || completion.length === 0) {
+        return (
+            <div className='w-full h-full flex flex-col items-center justify-center space-y-2'>
+                <p className='text-sm text-gray-600'>No cover letter generated...</p>
+            </div>
+        )
+    }
+
     return (
         <div className='flex flex-col w-ful justify-center'>
             <div className='mx-1 sm:mx-4 my-2 p-2 sm:p-4 rounded shadow bg-secondary space-y-4'>
