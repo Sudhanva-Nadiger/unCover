@@ -129,6 +129,11 @@ const ChatWrapper = ({
             while(!done) {
                 const { value, done: doneReading} = await reader.read()
                 done = doneReading
+
+                if(value === undefined) {
+                    continue
+                }
+                
                 const chunk = decoder.decode(value)
 
                 accumulator += chunk
