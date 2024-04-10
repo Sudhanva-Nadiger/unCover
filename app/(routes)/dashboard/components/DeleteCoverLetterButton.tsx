@@ -6,7 +6,6 @@ import { useToast } from '@/components/ui/use-toast'
 import { useAlertModal } from '@/hooks/useAlertModal'
 import { deleteCoverLetter } from '@/lib/actions'
 import { Trash2Icon } from 'lucide-react'
-import React, { useEffect } from 'react'
 
 type Props = {
     coverletterId: string
@@ -16,10 +15,9 @@ const DeleteCoverLetterButton = ({
     coverletterId
 }: Props) => {
     const { toast } = useToast()
-    const { setLoading, open, close, isOpen } = useAlertModal()
+    const { onOpen, onClose, isOpen } = useAlertModal()
 
     const handleDelete = async () => {
-        setLoading(true)
         const [_, error] = await deleteCoverLetter(coverletterId)
         if (error) {
             toast({
@@ -31,16 +29,15 @@ const DeleteCoverLetterButton = ({
             toast({
                 title: "Deleted successfully.",
             })
-            close()
+            onClose()
         }
-        setLoading(false)
     }
 
 
     return (
         <>
             <Button
-                onClick={open}
+                onClick={onOpen}
                 size='icon'
                 variant='destructive'
             >

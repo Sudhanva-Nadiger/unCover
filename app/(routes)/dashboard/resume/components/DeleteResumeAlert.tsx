@@ -17,10 +17,9 @@ type Props = {
 const DeleteResumeAlert = ({
     resume
 }: Props) => {
-    const { setLoading, open, close, isOpen } = useAlertModal();
+    const { onOpen, isOpen, onClose } = useAlertModal();
 
     const handleDelete = async () => {
-        setLoading(true)
         const [_, error] = await deleteResume(resume)
         if (error) {
             toast({
@@ -32,14 +31,13 @@ const DeleteResumeAlert = ({
             toast({
                 title: "Deleted successfully.",
             })
-            close()
+            onClose()
         }
-        setLoading(false)
     }
 
     return (
         <>
-            <Button onClick={open} variant={'destructive'} size={'icon'} className='items-center'>
+            <Button onClick={onOpen} variant={'destructive'} size={'icon'} className='items-center'>
                 <LucideTrash2 />
 
                 <AlertModal 

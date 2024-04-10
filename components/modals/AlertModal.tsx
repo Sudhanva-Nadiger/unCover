@@ -13,7 +13,6 @@ import {
 import { Loader } from "lucide-react"
 import { buttonVariants } from "../ui/button"
 import { useAlertModal } from "@/hooks/useAlertModal";
-import { useEffect, useState } from "react";
 
 const AlertModal = ({
     title,
@@ -23,18 +22,15 @@ const AlertModal = ({
 }: {
     title: string
     description?: string
-    onConfirm: () => Promise<void>
+    onConfirm: () => Promise<void>,
     isOpen: boolean
 }) => {
-    const [mounted, setMounted] = useState(false)
+    const { loading, setLoading, onClose } = useAlertModal()
 
-    useEffect(() => {
-        setMounted(true)
-    }, [])
-
-    const { loading, close, setLoading } = useAlertModal()
-
-    if (!mounted) return null
+    const handleClose = async () => {
+        onClose()
+        return;
+    }
 
     return (
         <AlertDialog open={isOpen}>
@@ -53,11 +49,17 @@ const AlertModal = ({
                             </div>
                         ) : (
                             <>
-                                <AlertDialogCancel onClick={close}>Cancel</AlertDialogCancel>
+                                <AlertDialogCancel onClick={async () => {
+                                    setLoading(true)
+                                    await handleClose()
+                                    setLoading(false)
+                                    onClose()
+                                }}>Cancel</AlertDialogCancel>
                                 <AlertDialogAction onClick={async () => {
                                     setLoading(true)
                                     await onConfirm()
-                                    close()
+                                    setLoading(false)
+                                    onClose()
                                 }} className={buttonVariants({
                                     variant: 'destructive'
                                 })}>Delete</AlertDialogAction>
