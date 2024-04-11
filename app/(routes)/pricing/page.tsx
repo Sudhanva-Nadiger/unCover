@@ -17,9 +17,11 @@ import {
   HelpCircle
 } from 'lucide-react'
 import Link from 'next/link'
+import { getUserSubscriptionPlan } from '@/lib/actions/stripeActions'
 
-const Page = () => {
+const Page = async () => {
   const { userId: user } = auth();
+  const { isSubscribed } = await getUserSubscriptionPlan()
 
   const pricingItems = [
     {
@@ -28,8 +30,8 @@ const Page = () => {
       quota: 1,
       features: [
         {
-          text: 'Only one PDF per account',
-          footnote: 'Limited to one uploaded resume.',
+          text: 'Only three PDF per account',
+          footnote: 'Limited to three uploaded resume.',
         },
         {
           text: 'One page per PDF',
@@ -47,11 +49,11 @@ const Page = () => {
       quota: 5,
       features: [
         {
-          text: 'Up to 5 resumes',
-          footnote: 'Ability to upload and create cover letters based on up to five resumes.',
+          text: 'Unlimited resumes',
+          footnote: 'Upload any number of resume.',
         },
         {
-          text: 'Two pages per PDF',
+          text: 'Four pages per PDF',
           footnote: 'Expanded page limit per resume.',
         },
         {
@@ -72,14 +74,23 @@ const Page = () => {
           </h1>
           <p className='mt-5 text-gray-600 sm:text-lg'>
             Whether you&apos;re just trying out our service
-            or need more, we&apos;ve got you covered.
+            or need more, we&apos;ve got you covered. Become a Pro member today and enjoy the srvice.
           </p>
         </div>
+
+        {isSubscribed &&(
+          <div className='bg-green-100 border border-green-200 p-5 rounded-lg'>
+            <p className='text-green-800'>
+              You are currently subscribed to the Pro plan.
+            </p>
+          </div>
+        
+        )}
 
         <div className='pt-12 grid grid-cols-1 gap-10 lg:grid-cols-2'>
           <TooltipProvider>
             {pricingItems.map(
-              ({ plan, tagline, quota, features }) => {
+              ({ plan, tagline, features }) => {
                 const price =
                   PLANS.find(
                     (p) => p.slug === plan.toLowerCase()
@@ -112,9 +123,6 @@ const Page = () => {
                       </p>
                       <p className='my-5 font-display text-6xl font-semibold'>
                         ${price}
-                      </p>
-                      <p className='text-gray-500'>
-                        per month
                       </p>
                     </div>
 
@@ -166,11 +174,11 @@ const Page = () => {
                             className: 'w-full',
                             variant: 'secondary',
                           })}>
-                          {user ? 'Upgrade now' : 'Sign up'}
+                          {user ? 'Start using it' : 'Sign up'}
                           <ArrowRight className='h-5 w-5 ml-1.5' />
                         </Link>
                       ) : user ? (
-                        <UpgradeButton />
+                        <UpgradeButton disabled={isSubscribed} />
                       ) : (
                         <Link
                           href='/sign-in'
