@@ -8,8 +8,6 @@ export async function POST(request: Request) {
   const body = await request.text()
   const signature = headers().get("Stripe-Signature") || ''
 
-  console.log('Webhook received:', body)
-
   let event: Stripe.Event
 
   try {
@@ -19,7 +17,6 @@ export async function POST(request: Request) {
       process.env.STRIPE_WEBHOOK_SECRET || ''
     )
   } catch (err) {
-    console.log(`⚠️ Webhook Error: ${err}`)
     return new Response(
       `Webhook Error: ${
         err instanceof Error ? err.message : 'Unknown Error'
@@ -36,16 +33,8 @@ export async function POST(request: Request) {
     })
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const subscription =
-      await stripe.subscriptions.retrieve(
-        session.subscription as string
-      )
-
+  if (event.type === 'checkout.session.completed') {    
       await db.insert(stripeDetails).values({
-        stripeSubscriptionId: subscription.id,
-        stripeCustomerId: subscription.customer as string,
-        stripePriceId: subscription.items.data[0]?.price.id,
         isSubscribed: true,
         userId: session.metadata.userId as string,
       })
