@@ -71,8 +71,6 @@ export const deleteResume = async (resume: ResumeDetail) => {
 
         const [_, { error }] = await Promise.all([deleteFromDbPromise, deleteFromBucketPromise])
 
-        console.log("deleted :)")
-
         if(error) {
             throw error
         }

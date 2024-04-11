@@ -9,7 +9,6 @@ export const uploadResume = async (userId: string | null, file: File) => {
     
     try {
         const { data, error } = await supabase.storage.from(BUCKET_NAME).upload(`${userId}/${file.name}`, file)
-        console.log(data, error);
 
         return [data as unknown as { id: string }, error] as const
     } catch (error) {

@@ -2,7 +2,6 @@
 
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { createStipeCheckoutSession } from '@/lib/actions/stripeActions'
 import { useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
 
@@ -12,19 +11,21 @@ const UpgradeButton = ({ disabled }: { disabled?: boolean}) => {
 
   const handleClick = async () => {
     setLoading(true)
-    const [response, error] = await createStipeCheckoutSession()
+    const response = await fetch('/api/checkout')
     setLoading(false)
 
-    if (error || !response) {
+    if (!response.ok) {
       return toast({
         title: "Could not generate payment checkout session",
         variant: "destructive"
       })
     }
 
-    if("message" in response) {
+    const data = await response.json()
+
+    if("message" in data) {
       return toast({
-        title: response["message"]
+        title: data["message"]
       })
     }
 
@@ -32,7 +33,7 @@ const UpgradeButton = ({ disabled }: { disabled?: boolean}) => {
       title: 'Created the payment session successfully! Redirecting to payment page.'
     })
 
-    window.location.href = response.url ?? '/dashboard/billing'
+    window.location = data.url ?? '/dashboard/billing'
   }
 
   return (

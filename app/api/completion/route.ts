@@ -61,10 +61,7 @@ function generatePrompt({
 }
 
 export async function POST(req: Request) {
-    const { userId } = auth();
-
-    console.log('Generating cover letter ********************************');
-    
+    const { userId } = auth();    
 
     if(!userId) {
         return new Response('Unauthorised', { status: 401})

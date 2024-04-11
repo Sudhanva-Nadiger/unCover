@@ -142,8 +142,6 @@ const ChatWrapper = ({
             }
 
         } catch (error) {
-            console.log(error);
-
             toast({
                 title: 'Something went wrong',
                 description: 'Could not complete the request',
