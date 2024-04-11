@@ -2,8 +2,9 @@ export const PLANS = [
     {
       name: 'Free',
       slug: 'free',
-      quota: 10,
+      resumeCount: "3",
       pagesPerPdf: 1,
+      fileSize: "1MB",
       price: {
         amount: 0,
         priceIds: {
@@ -15,12 +16,13 @@ export const PLANS = [
     {
       name: 'Pro',
       slug: 'pro',
-      quota: 50,
-      pagesPerPdf: 2,
+      resumeCount: "Unlimited",
+      pagesPerPdf: 4,
+      fileSize: "4MB",
       price: {
         amount: 5,
         priceIds: {
-          test: '',
+          test: 'price_1P40iLSDalN5UXyHBesQ5wwe',
           production: '',
         },
       },

@@ -22,6 +22,13 @@
       "when": 1712424567578,
       "tag": "0002_cute_blink",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1712823552280,
+      "tag": "0003_swift_green_goblin",
+      "breakpoints": true
     }
   ]
 }
