@@ -78,7 +78,6 @@ export const createStipeCheckoutSession = async () => {
         mode: 'payment',
         success_url: `${billingUrl}?status=success`,
         cancel_url: `${billingUrl}?status=cancel`,
-        billing_address_collection: 'auto',
         line_items: [
             {
                 price_data: {
