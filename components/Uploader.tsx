@@ -7,10 +7,11 @@ import { Cloud, File, Loader } from 'lucide-react'
 import { Progress } from './ui/progress'
 import { useToast } from './ui/use-toast'
 import { useRouter } from 'next/navigation'
-import { uploadResume } from '@/lib/actions'
+import { getTotalResumeCount, uploadResume } from '@/lib/actions'
 import { storeResumeDetails } from '@/lib/actions'
 import { Document, pdfjs } from 'react-pdf'
 import { useUploadModal } from '@/hooks/useUploadModal'
+import { PLANS } from '@/lib/config/stripe'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -33,21 +34,38 @@ const UploadDropzone = ({
     const { toast } = useToast()
     const { onClose } = useUploadModal();
 
+    const maxPages = isSubscribed ? PLANS[1].pagesPerPdf : PLANS[0].pagesPerPdf
+    const maxFileSize = isSubscribed ? PLANS[1].fileSize : PLANS[0].fileSize
+    const resumeCount = isSubscribed ? PLANS[1].resumeCount : PLANS[0].resumeCount
+
     useEffect(() => {
         if (numPages !== null) {
 
-            if (numPages > 1) {
+            if (numPages > maxPages) {
                 setFile(null)
                 setNumPages(null)
                 toast({
-                    title: 'Invalid file',
-                    description: 'Please upload a single page resume',
+                    title: `Please upload a ${maxPages}  page resume`,
+                    description: 'Please upgrade to pro version',
                     variant: 'destructive',
                 })
 
                 return
             }
             
+            const fileSize = file?.size
+
+            if(fileSize && (fileSize > maxFileSize * 1024 * 1024)) {
+                setFile(null)
+                setNumPages(null)
+                toast({
+                    title: `Please upload a file less than ${maxFileSize}MB`,
+                    description: 'If you are Free plan user upgrader to Pro plan',
+                    variant: 'destructive',
+                })
+
+                return
+            }
 
             const startSimulatedProgress = () => {
                 setUploadProgress(0)
@@ -66,7 +84,6 @@ const UploadDropzone = ({
             }
 
 
-
             const uploadFiletoSupabse = async (acceptedFile: File | null) => {
 
                 if (!acceptedFile) {
@@ -77,6 +94,24 @@ const UploadDropzone = ({
                 setIsUploading(true)
 
                 const progressInterval = startSimulatedProgress()
+
+                const [totalResumeCount, countError] = await getTotalResumeCount(userId)
+
+                if (countError) {
+                    return toast({
+                        title: 'Something went wrong',
+                        description: 'Please try again later',
+                        variant: 'destructive',
+                    })
+                }
+
+                if(!isSubscribed && totalResumeCount > resumeCount) {
+                    return toast({
+                        title: 'Upgrade to Pro Plan',
+                        description: 'You have reached the maximum limit of resumes',
+                        variant: 'destructive',
+                    })
+                }
 
                 const [data, error] = await uploadResume(userId, acceptedFile)
 

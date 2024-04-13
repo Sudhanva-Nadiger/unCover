@@ -4,7 +4,11 @@ import { useState, useEffect } from "react";
 
 import UploadModal from "@/components/modals/UploadMoadal";
 
-export const UploadModalProvider = () => {
+export const UploadModalProvider = ({
+    isSubscribed
+}: {
+    isSubscribed?: boolean
+}) => {
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
@@ -14,6 +18,6 @@ export const UploadModalProvider = () => {
     if (!isMounted) return null;
 
     return (
-        <UploadModal />
+        <UploadModal isSubscribed={isSubscribed} />
     )
 }

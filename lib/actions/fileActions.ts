@@ -1,6 +1,6 @@
 "use server"
 
-import { and, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { db } from "../db"
 import { ResumeDetail, resumeDetail } from "../schema"
 import { revalidatePath } from "next/cache";
@@ -47,6 +47,23 @@ export const getResumeDetailsById = async (userId: string | null, resumeId: stri
     } catch (error) {
         return [null, error as Error] as const
     }
+}
+
+export const getTotalResumeCount = async (userId: string | null) => {
+    if(!userId) {
+        return [null, new Error("Invalid data")] as const
+    }
+
+    try {
+        const res = await db.select({
+            count: count()
+        }).from(resumeDetail).where(eq(resumeDetail.userId, userId))
+
+        return [res[0].count, null] as const
+    } catch (error) {
+        return [null, error as Error] as const
+    }
+
 }
 
 export const getAllResumes = async (userId: string | null) => {

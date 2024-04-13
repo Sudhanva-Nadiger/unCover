@@ -7,7 +7,11 @@ import { useAuth } from '@clerk/nextjs'
 import { useUploadModal } from '@/hooks/useUploadModal'
 
 
-const UploadMoadal = () => {
+const UploadMoadal = ({
+    isSubscribed
+}: {
+    isSubscribed?: boolean
+}) => {
     const { userId } = useAuth()
     const { isOpen, onClose } = useUploadModal()
 
@@ -18,7 +22,7 @@ const UploadMoadal = () => {
             isOpen={isOpen}
             onClose={onClose}
         >
-            <UploadDropzone userId={userId!} />
+            <UploadDropzone isSubscribed={isSubscribed}  userId={userId!} />
         </Modal>
     )
 }

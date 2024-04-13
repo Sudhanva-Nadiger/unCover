@@ -5,8 +5,8 @@ type Props = {}
 
 const Loading = (props: Props) => {
   return (
-    <div className='w-full h-full flex justify-center items-center p-2 m-1'>
-        <Loader className='w-12 h-12 animate-spin' />
+    <div className='w-full h-screen overflow-hidden flex justify-center items-center p-2 m-1'>
+        <Loader className='w-6 h-6 animate-spin' />
     </div>
   )
 }
