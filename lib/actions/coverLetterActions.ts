@@ -1,5 +1,6 @@
 "use server"
 
+import { unstable_noStore as noStore } from 'next/cache';
 import { and, eq } from "drizzle-orm"
 import { db } from "../db"
 import { coverLetter, type CoverLetter } from "../schema"
@@ -25,6 +26,7 @@ export const fetchCoverLetterById = async (userId: string | null, coverLetterId:
 }
 
 export const fetchAllCoverLetters = async (userId: string | null) => {
+    noStore()
     if(!userId) {
         return [null, new Error("Invalid user")] as const
     }
@@ -35,7 +37,6 @@ export const fetchAllCoverLetters = async (userId: string | null) => {
     } catch (error) {
         return [null, error as Error] as const
     }
-
 }
 
 export const deleteCoverLetter = async (id: string) => {
@@ -63,7 +64,7 @@ export const saveCoverLetterDetails = async (detail: Omit<CoverLetter, "coverLet
         const res = await db.insert(coverLetter).values(detail).returning({
             coverLetterId: coverLetter.coverLetterId
         })
-        revalidatePath('/dashboard')
+
         return [res[0], null] as const
     } catch (error) {
         return [null, error as Error] as const
