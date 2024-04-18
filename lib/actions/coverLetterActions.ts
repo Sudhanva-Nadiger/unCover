@@ -37,6 +37,7 @@ export const fetchAllCoverLetters = async (userId: string | null) => {
     } catch (error) {
         return [null, error as Error] as const
     }
+
 }
 
 export const deleteCoverLetter = async (id: string) => {

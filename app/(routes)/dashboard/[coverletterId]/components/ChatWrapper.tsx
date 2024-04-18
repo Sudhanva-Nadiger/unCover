@@ -9,7 +9,6 @@ import {
     TabsTrigger
 } from "@/components/ui/tabs"
 
-import { useCompletion } from 'ai/react'
 import { useToast } from '@/components/ui/use-toast'
 import { useSelectResume } from '@/hooks/useSelectPdf'
 import { saveCoverLetterDetails } from '@/lib/actions'
@@ -45,7 +44,7 @@ const ChatWrapper = ({
     const { userId } = useAuth()
 
     const saveTheDetails = ((searchParams.get('created_clid') === null) && (coverLetter === null))
-    const coverLetterId = searchParams.get('created_clid') || coverLetter?.coverLetterId
+    let coverLetterId = searchParams.get('created_clid') || coverLetter?.coverLetterId
 
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -70,12 +69,12 @@ const ChatWrapper = ({
                     })
                 }
 
-                const params = new URLSearchParams(searchParams);
-                params.set('created_clid', res.coverLetterId)
+                // const params = new URLSearchParams(searchParams);
+                // params.set('created_clid', res.coverLetterId)
 
-                router.replace(`${pathname}?${params.toString()}`, {
-                    scroll: false
-                })
+                window.history.replaceState(null, '', `?created_clid=${res.coverLetterId}`);
+
+                coverLetterId = res.coverLetterId
             }
 
 
@@ -107,15 +106,16 @@ const ChatWrapper = ({
                     jobDescription,
                     prompt
                 }),
+                cache: 'no-store'
             })
 
-            if(!completionResponse.ok) {
+            if (!completionResponse.ok) {
                 throw new Error("Could not generate the data")
             }
 
             const stream = completionResponse.body
 
-            if(!stream) {
+            if (!stream) {
                 throw new Error()
             }
 
@@ -126,17 +126,17 @@ const ChatWrapper = ({
 
             let done = false
             let accumulator = ''
-            while(!done) {
-                const { value, done: doneReading} = await reader.read()
+            while (!done) {
+                const { value, done: doneReading } = await reader.read()
                 done = doneReading
 
-                if(value === undefined) {
+                if (!value) {
                     continue
                 }
-                
+
                 const chunk = decoder.decode(value)
 
-                accumulator += chunk
+                accumulator += chunk ?? ''
 
                 setAccumulatedText(accumulator)
             }
@@ -173,10 +173,10 @@ const ChatWrapper = ({
                             />
                         </TabsContent>
                         <TabsContent value='coverletter' className='w-full'>
-                            <GeneratedCoverLetter 
+                            <GeneratedCoverLetter
                                 loading={loading}
-                                completion={accumulatedText || coverLetter?.response}
-                            /> 
+                                completion={coverLetter?.response || accumulatedText}
+                            />
                         </TabsContent>
                     </Tabs>
                 </div>
