@@ -7,6 +7,8 @@ import { fetchAllCoverLetters } from '@/lib/actions';
 import { auth } from '@clerk/nextjs';
 import DeleteCoverLetterButton from './components/DeleteCoverLetterButton';
 
+export const revalidate = 0
+
 const DashboardPage = async () => {
     const { userId } = auth()
     const [coverLetters, err] = await fetchAllCoverLetters(userId)
