@@ -19,7 +19,6 @@ export function generateMetaData({
   title = "unCover - Everything you need while applying for a job at one place.",
   description = "unCover is an open-source software to make creation of cover letter easy to apply for job.",
   image = "/thumbnail.jpg",
-  icons = "/logo.png",
   noIndex = false
 }: {
   title?: string
@@ -47,7 +46,6 @@ export function generateMetaData({
       images: [image],
       creator: "@sudhanvanadiger"
     },
-    icons,
     metadataBase: new URL('https://un-cover.vercel.app'),
     themeColor: '#FFF',
     ...(noIndex && {
